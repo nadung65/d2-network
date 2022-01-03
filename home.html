@@ -49,23 +49,6 @@
       let peer;
       let peerList = [];
       let localStream;
-      
-      const init = async () => {
-        peer = new Peer();
-
-        await peer.on('open', id => {
-          if (!navigator.mediaDevices) return;
-          
-          navigator.mediaDevices
-            .getUserMedia({video: true, audio: true})
-            .then(async stream => {
-              localStream = stream;
-              addLocalVideo(stream);
-
-              await listen(stream);
-            });
-        });
-      }
 
       const listen = async stream => {
         await peer.on('call', call => {
