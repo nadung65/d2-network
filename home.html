@@ -50,22 +50,24 @@
       let peerList = [];
       let localStream;
 
-      peer.on('call', call => {
-        call.answer(localStream);
-        call.on('stream', remoteStream => {
-          if (!peerList.includes(call.peer)) {
-            addRemoteVideo(remoteStream);
-            peerList.push(call.peer);
-          }
+      const listen = () => {
+        peer.on('call', call => {
+          call.answer(localStream);
+          call.on('stream', remoteStream => {
+            if (!peerList.includes(call.peer)) {
+              addRemoteVideo(remoteStream);
+              peerList.push(call.peer);
+            }
+          });
         });
-      });
 
-      const startCall = (remotePeerID, stream) => {
-        let call = peer.call(remotePeerID, stream);
+        return true;
+      };
+
+      const startCall = (remotePeerID) => {
+        let call = peer.call(remotePeerID, localStream);
         call &&
           call.on('stream', remoteStream => {
-            window.postMessage('On stream');
-
             if (!peerList.includes(call.peer)) {
               addRemoteVideo(remoteStream);
               peerList.push(call.peer);
@@ -73,7 +75,7 @@
             }
           });
 
-        window.postMessage('- Started');
+        return true;
       };
 
       const addLocalVideo = stream => {
