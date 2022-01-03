@@ -50,19 +50,15 @@
       let peerList = [];
       let localStream;
 
-      const listen = async stream => {
-        await peer.on('call', call => {
-          call.answer(stream);
-          call.on('stream', remoteStream => {
-            if (!peerList.includes(call.peer)) {
-              addRemoteVideo(remoteStream);
-              peerList.push(call.peer);
-            }
-          });
+      peer.on('call', call => {
+        call.answer(localStream);
+        call.on('stream', remoteStream => {
+          if (!peerList.includes(call.peer)) {
+            addRemoteVideo(remoteStream);
+            peerList.push(call.peer);
+          }
         });
-
-        return true;
-      };
+      });
 
       const startCall = (remotePeerID, stream) => {
         let call = peer.call(remotePeerID, stream);
