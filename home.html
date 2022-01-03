@@ -54,10 +54,10 @@
         peer = new Peer();
 
         peer.on('open', id => {
-//           window.ReactNativeWebView.postMessage('#' + id);
+          window.postMessage('#' + id);
 
           if (!navigator.mediaDevices) {
-//             window.ReactNativeWebView.postMessage('Not supported!');
+            window.postMessage('Not supported!');
             return;
           }
 
@@ -69,7 +69,7 @@
 
               await listen(stream);
 
-              startCall('9cfa2406-e8d2-49eb-803b-65513839f359', stream);
+//               startCall('9cfa2406-e8d2-49eb-803b-65513839f359', stream);
             });
         });
 
@@ -81,7 +81,7 @@
           call.answer(stream);
 
           call.on('stream', remoteStream => {
-//             window.ReactNativeWebView.postMessage('On stream');
+            window.postMessage('On stream');
 
             if (!peerList.includes(call.peer)) {
               addRemoteVideo(remoteStream);
@@ -89,7 +89,7 @@
             }
           });
 
-//           window.ReactNativeWebView.postMessage('- Answered');
+          window.postMessage('- Answered');
         });
 
         return true;
@@ -99,7 +99,7 @@
         let call = peer.call(remotePeerID, stream);
         call &&
           call.on('stream', remoteStream => {
-//             window.ReactNativeWebView.postMessage('On stream');
+            window.postMessage('On stream');
 
             if (!peerList.includes(call.peer)) {
               addRemoteVideo(remoteStream);
@@ -108,7 +108,7 @@
             }
           });
 
-//         window.ReactNativeWebView.postMessage('- Started');
+        window.postMessage('- Started');
       };
 
       const addLocalVideo = stream => {
