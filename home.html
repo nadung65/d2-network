@@ -39,11 +39,29 @@
   </head>
   <body>
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
-
+    
     <div class="container">
       <video playsinline autoplay id="remoteVideo"></video>
       <video playsinline autoplay id="localVideo"></video>
     </div>
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.2/firebase-app.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyClJCr_QB9ZDir5fLDiBum42qVGZhnUgmo",
+        authDomain: "d2-network.firebaseapp.com",
+        databaseURL: "https://d2-network-default-rtdb.firebaseio.com",
+        projectId: "d2-network",
+        storageBucket: "d2-network.appspot.com",
+        messagingSenderId: "439403588318",
+        appId: "1:439403588318:web:0f0617f5375adeed3e304f"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+    </script>
 
     <script>
       let peer;
@@ -76,6 +94,32 @@
 
               startCall(remotePeerID);
             });
+        });
+      } else if (paramString === 'action=init') {
+        peer = new Peer();
+
+        peer.on('open', id => {
+          if (!navigator.mediaDevices) {
+            console.log('Not supported');
+            return;
+          }
+
+          console.log('#' + id);
+
+          addDoc(doc(db, '/test/ahihi'), {
+            inCall: id
+          }).then(() => {
+            console.log('listening');
+            
+            navigator.mediaDevices
+              .getUserMedia({video: true, audio: true})
+              .then(async stream => {
+                localStream = stream;
+                addLocalVideo(stream);
+
+                listen()
+              });
+          })
         });
       }
 
