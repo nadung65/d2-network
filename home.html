@@ -49,6 +49,12 @@
       let peer;
       let peerList = [];
       let localStream;
+      
+      const paramString = (window.location.search).substring(1);
+      if (paramString.startsWith('id=')) {
+        const id = paramString.substring(3);
+        startCall(id);
+      }
 
       const listen = () => {
         peer.on('call', call => {
