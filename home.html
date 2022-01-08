@@ -51,8 +51,12 @@
       let localStream;
       
       const paramString = (window.location.search).substring(1);
+      console.log(paramString);
+      
       if (paramString.startsWith('id=')) {
         const id = paramString.substring(3);
+        console.log(id);
+        
         startCall(id);
       }
 
