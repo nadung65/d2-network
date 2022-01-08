@@ -45,10 +45,10 @@
       <video playsinline autoplay id="localVideo"></video>
     </div>
     
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.2/firebase-app.js";
-      import { getFirestore, addDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.2/firebase-firestore.js";
-
+    <script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-firestore-compat.js"></script>
+    
+    <script>
       const firebaseConfig = {
         apiKey: "AIzaSyClJCr_QB9ZDir5fLDiBum42qVGZhnUgmo",
         authDomain: "d2-network.firebaseapp.com",
@@ -59,11 +59,10 @@
         appId: "1:439403588318:web:0f0617f5375adeed3e304f"
       };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-    </script>
-
-    <script>
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = app.firestore();
+      console.log(db)
+      
       let peer;
       let peerList = [];
       let localStream;
@@ -106,10 +105,10 @@
 
           console.log('#' + id);
 
-          addDoc(doc(db, '/test/ahihi'), {
+          db.collection("test").add({
             inCall: id
-          }).then(() => {
-            console.log('listening');
+          }).then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
             
             navigator.mediaDevices
               .getUserMedia({video: true, audio: true})
