@@ -53,11 +53,30 @@
       const paramString = (window.location.search).substring(1);
       console.log(paramString);
       
+      // Nếu nhận được remoteID từ người nhận
       if (paramString.startsWith('id=')) {
-        const id = paramString.substring(3);
-        console.log(id);
+        const remotePeerID = paramString.substring(3);
+        console.log('remotePeerID:', remotePeerID);
         
-        startCall(id);
+        peer = new Peer();
+
+        peer.on('open', id => {
+          if (!navigator.mediaDevices) {
+            console.log('Not supported');
+            return;
+          }
+
+          console.log('#' + id);
+
+          navigator.mediaDevices
+            .getUserMedia({video: true, audio: true})
+            .then(async stream => {
+              localStream = stream;
+              addLocalVideo(stream);
+
+              startCall(remotePeerID);
+            });
+        });
       }
 
       const listen = () => {
